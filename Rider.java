@@ -10,7 +10,8 @@ public class Rider extends Person {
         travelTime = (int) (Math.random() * 50 + 1);
         arrivalTime = (int) (Math.random() * 30 + 1);
         riderTimer = new RiderTimer();
-        System.out.println("RIDER " + ID + " CREADO " + "(" + personApp + ", " + personService + ", " + arrivalTime +  ", " + travelTime + ")");
+        System.out.println("RIDER " + ID + " CREADO " + "(" + personApp + ", " + personService + ", " 
+        + arrivalTime +  ", " + travelTime + ")");
     }
 
     public void arrive() {
@@ -19,11 +20,7 @@ public class Rider extends Person {
     }
 
     public boolean arrivalFinished() {
-        if(riderTimer.isFinished()) {
-            riderTimer.reset();
-            return true;
-        }
-        return false;
+        return riderTimer.isFinished();
     }
 
     public void travel() {
@@ -33,7 +30,6 @@ public class Rider extends Person {
     public boolean travelFinished() {
         if(riderTimer.isFinished()) {
             riderStatus = status.AVAILABLE;
-            riderTimer.reset();
             return true;
         }
         return false;
@@ -58,5 +54,9 @@ public class Rider extends Person {
 
     public int getArrivalTime() {
         return arrivalTime;
+    }
+
+    public void finishWork() {
+        riderTimer.kill();
     }
 }

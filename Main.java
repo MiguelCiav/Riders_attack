@@ -12,10 +12,10 @@
  */
 
 public class Main {
-    private static final int MAX_USERS = 100;
-    private static final int MAX_RIDERS = 20;
+    private static final int MAX_USERS = 20;
+    private static final int MAX_RIDERS = 100;
     public static void main(String[] args) {
-        Dispatcher dispatcher = new Dispatcher(MAX_RIDERS);
+        Dispatcher dispatcher = new Dispatcher(MAX_RIDERS, MAX_USERS);
         User[] users = new User[MAX_USERS];
 
         for(int i = 0; i < MAX_USERS; i++) {

@@ -1,18 +1,20 @@
 public class RiderTimer{
     private int time;
     private Counter counter;
-    private boolean on;
+    private boolean kill;
 
     public RiderTimer() {
-        this.time = 0;
-        this.on = false;
+        time = 0;
+        kill = false;
         counter = new Counter();
         counter.start();
     }
 
     public void countdown(int seconds) {
-        on = true;
         time = seconds;
+        if(counter.getState() == Thread.State.TIMED_WAITING) {
+            counter.interrupt();
+        }
     }
 
     public boolean isFinished() {
@@ -20,25 +22,35 @@ public class RiderTimer{
     }
 
     public void reset() {
-        on = false;
+        time = 0;
+    }
+
+    public void kill() {
+        kill = true;
+        if(counter.getState() == Thread.State.TIMED_WAITING) {
+            counter.interrupt();
+        }
     }
 
     private class Counter extends Thread {
         public void run () {
             while (true) {
-                if(!on) {
-                    Thread.yield();
-                    continue;
+                if(kill) {
+                    break;
+                }
+                if(time <= 0){
+                    try {
+                        sleep(Long.MAX_VALUE);
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
                 }
                 try {
                     sleep(1000);
+                    time--;
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    continue;
                 }
-                if(time < 0){
-                    reset();
-                }
-                time--;
             }
         }
     }

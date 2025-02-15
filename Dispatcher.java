@@ -2,9 +2,11 @@ public class Dispatcher {
     private Rider[] riders;
     private int MAX_RIDERS;
     private int usersAttended = 0;
+    private int goal;
 
-    public Dispatcher(int MAX_RIDERS) {
+    public Dispatcher(int MAX_RIDERS, int goal) {
         this.MAX_RIDERS = MAX_RIDERS;
+        this.goal = goal;
         riders = new Rider[MAX_RIDERS];
         initRiders();
     }
@@ -15,6 +17,35 @@ public class Dispatcher {
         }
     }
 
+    public void requestRider(Person.service service, Person.app app, int ID) {
+        System.out.println("USER " + ID + " SOLICITÓ UN VIAJE CON " + app + " EN " + service);
+        int actualRider = requestFirstRider(service, app, ID);
+        int newRider = waitForArrive(service, app, actualRider, ID);
+        while(!riders[newRider].travelFinished()){
+            try {
+                Thread.sleep(riders[newRider].getTravelTime());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("USER " + ID + " LLEGÓ A SU DESTINO GRACIAS AL RIDER " + newRider);
+        usersAttended++;
+        if(usersAttended == goal){
+            endRiders();
+        }
+    }
+
+    private int requestFirstRider(Person.service service, Person.app app, int ID) {
+        int actualRider = -1;
+        actualRider = getMinRider(service, app);
+        while (actualRider == -1) {
+            Thread.yield();
+            actualRider = getMinRider(service, app);
+        }
+        System.out.println("EL RIDER " + actualRider + " ACEPTÓ EL VIAJE DEL USER " + ID + ", YA VA EN CAMINO");
+        return actualRider;
+    }
+
     private synchronized int getMinRider(Person.service service, Person.app app) {
         int minArrival = Integer.MAX_VALUE;
         int riderIndex = -1;
@@ -22,12 +53,12 @@ public class Dispatcher {
             if (riders[i].getArrivalTime() > minArrival) {
                 continue;
             }
-            if (riders[i].isAvailable(service, app)) {
+            if (riders[i].getArrivalTime() < minArrival && riders[i].isAvailable(service)) {
                 minArrival = riders[i].getArrivalTime();
                 riderIndex = i;
                 continue;
             }
-            if (riders[i].isAvailable(service)) {
+            if (riderIndex != -1 && riders[riderIndex].getApp() != app && riders[i].isAvailable(service, app)) {
                 minArrival = riders[i].getArrivalTime();
                 riderIndex = i;
             }
@@ -39,6 +70,16 @@ public class Dispatcher {
         return riderIndex;
     }
 
+    private int waitForArrive(Person.service service, Person.app app, int actualRider, int ID) {
+        while (!riders[actualRider].arrivalFinished()) {
+            Thread.yield();
+            actualRider = getNewRider(service, app, actualRider, ID);
+        }
+        System.out.println("USER " + ID + " SE ENCONTRÓ CON EL RIDER " + actualRider + ", COMIENZA EL VIAJE");
+        riders[actualRider].travel();
+        return actualRider;
+    }
+
     private synchronized int getNewRider(Person.service service, Person.app app, int actualRider, int ID) {
         int minArrival = riders[actualRider].getArrivalTime();
         int riderIndex = -1;
@@ -46,12 +87,12 @@ public class Dispatcher {
             if (riders[i].getArrivalTime() > minArrival) {
                 continue;
             }
-            if (riders[i].isAvailable(service, app)) {
+            if (riders[i].getArrivalTime() < minArrival && riders[i].isAvailable(service)) {
                 minArrival = riders[i].getArrivalTime();
                 riderIndex = i;
                 continue;
             }
-            if (riders[i].isAvailable(service)) {
+            if (riders[actualRider].getApp() != app && riders[i].isAvailable(service, app)) {
                 minArrival = riders[i].getArrivalTime();
                 riderIndex = i;
             }
@@ -66,35 +107,9 @@ public class Dispatcher {
         return riderIndex;
     }
 
-    private int getFirstRider(Person.service service, Person.app app, int ID) {
-        int actualRider = -1;
-        actualRider = getMinRider(service, app);
-        while (actualRider == -1) {
-            actualRider = getMinRider(service, app);
+    private void endRiders() {
+        for (int i = 0; i < MAX_RIDERS; i++){
+            riders[i].finishWork();
         }
-        riders[actualRider].arrive();
-        System.out.println("EL RIDER " + actualRider + " ACEPTÓ EL VIAJE DEL USER " + ID + ", YA VA EN CAMINO");
-        return actualRider;
-    }
-
-    private int waitForArrive(Person.service service, Person.app app, int actualRider, int ID) {
-        while (!riders[actualRider].arrivalFinished()) {
-            Thread.yield();
-            actualRider = getNewRider(service, app, actualRider, ID);
-        }
-        riders[actualRider].travel();
-        return actualRider;
-    }
-
-    public void requestRider(Person.service service, Person.app app, int ID) {
-        System.out.println("USER " + ID + " SOLICITÓ UN VIAJE CON " + app + " EN " + service);
-        int actualRider = getFirstRider(service, app, ID);
-        int newRider = waitForArrive(service, app, actualRider, ID);
-        while(!riders[newRider].travelFinished()){
-            Thread.yield();
-        }
-        System.out.println("USER " + ID + " LLEGÓ A SU DESTINO GRACIAS AL RIDER " + newRider);
-        usersAttended++;
-        System.out.println("USUARIOS ATENDIDOS: " + usersAttended);
     }
 }
