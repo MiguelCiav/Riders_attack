@@ -4,10 +4,11 @@ public class User extends Person implements Runnable{
     public User(int ID, Dispatcher dispatcher) {
         super(ID);
         this.dispatcher = dispatcher;
+        System.out.println("USER " + ID + " CREADO " + "(" + personApp + ", " + personService + ")");
     }
 
     @Override
     public void run() {
-        dispatcher.requestRider(personService, personApp);
+        dispatcher.requestRider(personService, personApp, ID);
     }
 }
