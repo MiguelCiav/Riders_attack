@@ -16,7 +16,6 @@ public abstract class Person {
     public Person (int ID) {
         this.ID = ID;
         personService = service.values()[(int) (Math.random() * service.values().length)];
-        personApp = app.values()[(int) (Math.random() * app.values().length)];
     }
 
     public service getService() {

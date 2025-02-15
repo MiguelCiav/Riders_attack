@@ -3,6 +3,7 @@ public class User extends Person implements Runnable{
 
     public User(int ID, Dispatcher dispatcher) {
         super(ID);
+        personApp = app.values()[(int) (Math.random() * app.values().length)];
         this.dispatcher = dispatcher;
         System.out.println("USER " + ID + " CREADO " + "(" + personApp + ", " + personService + ")");
     }

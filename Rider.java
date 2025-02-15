@@ -4,8 +4,9 @@ public class Rider extends Person {
     private int arrivalTime;
     private RiderTimer riderTimer;
 
-    public Rider(int ID) {
+    public Rider(int ID, app personApp) {
         super(ID);
+        this.personApp = personApp;
         riderStatus = status.AVAILABLE;
         travelTime = (int) (Math.random() * 50 + 1);
         arrivalTime = (int) (Math.random() * 30 + 1);

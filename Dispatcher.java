@@ -2,18 +2,29 @@ public class Dispatcher {
     private Rider[] riders;
     private int MAX_RIDERS;
     private int usersAttended = 0;
+    private int availableRiders;
     private int goal;
 
-    public Dispatcher(int MAX_RIDERS, int goal) {
-        this.MAX_RIDERS = MAX_RIDERS;
+    public Dispatcher(int bipbip, int ridery, int yummy, int goal) {
+        this.MAX_RIDERS = bipbip + ridery + yummy;
+        availableRiders = MAX_RIDERS;
         this.goal = goal;
         riders = new Rider[MAX_RIDERS];
-        initRiders();
+        initRiders(bipbip, ridery, yummy);
     }
 
-    public void initRiders() {
-        for (int i = 0; i < MAX_RIDERS; i++) {
-            riders[i] = new Rider(i);
+    public void initRiders(int bipbip, int ridery, int yummy) {
+        int i = 0;
+        for (i = 0; i < bipbip; i++) {
+            riders[i] = new Rider(i,Person.app.BIPBIP);
+        }
+        ridery += bipbip;
+        for (; i < ridery; i++) {
+            riders[i] = new Rider(i,Person.app.RIDERY);
+        }
+        yummy += ridery;
+        for (; i < yummy; i++) {
+            riders[i] = new Rider(i,Person.app.YUMMY);
         }
     }
 
@@ -40,9 +51,12 @@ public class Dispatcher {
         actualRider = getMinRider(service, app);
         while (actualRider == -1) {
             Thread.yield();
-            actualRider = getMinRider(service, app);
+            if(availableRiders > 0) {
+                actualRider = getMinRider(service, app);
+            }
         }
         System.out.println("EL RIDER " + actualRider + " ACEPTÓ EL VIAJE DEL USER " + ID + ", YA VA EN CAMINO");
+        availableRiders++;
         return actualRider;
     }
 
@@ -67,6 +81,7 @@ public class Dispatcher {
             return -1;
         }
         riders[riderIndex].arrive();
+        availableRiders--;
         return riderIndex;
     }
 
