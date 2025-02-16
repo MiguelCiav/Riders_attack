@@ -29,7 +29,7 @@ public class Dispatcher {
     }
 
     public void requestRider(Person.service service, Person.app app, int ID) {
-        System.out.println("USER " + ID + " SOLICITÓ UN VIAJE CON " + app + " EN " + service);
+        System.out.println("- USER " + ID + ": SOLICITA VIAJE EN " + service + " (" + app + ")");
         int actualRider = requestFirstRider(service, app, ID);
         int newRider = waitForArrive(service, app, actualRider, ID);
         while(!riders[newRider].travelFinished()){
@@ -39,7 +39,7 @@ public class Dispatcher {
                 e.printStackTrace();
             }
         }
-        System.out.println("USER " + ID + " LLEGÓ A SU DESTINO GRACIAS AL RIDER " + newRider);
+        System.out.println("- USER " + ID + ": LLEGÓ A SU DESTINO GRACIAS AL RIDER " + newRider);
         usersAttended++;
         if(usersAttended == goal){
             endRiders();
@@ -55,7 +55,7 @@ public class Dispatcher {
                 actualRider = getMinRider(service, app);
             }
         }
-        System.out.println("EL RIDER " + actualRider + " ACEPTÓ EL VIAJE DEL USER " + ID + ", YA VA EN CAMINO");
+        System.out.println("- RIDER " + actualRider + ": ACEPTÓ VIAJE DEL USER " + ID);
         availableRiders++;
         return actualRider;
     }
@@ -90,7 +90,7 @@ public class Dispatcher {
             Thread.yield();
             actualRider = getNewRider(service, app, actualRider, ID);
         }
-        System.out.println("USER " + ID + " SE ENCONTRÓ CON EL RIDER " + actualRider + ", COMIENZA EL VIAJE");
+        System.out.println("- RIDER " + actualRider + ": YA LLEGÓ A LA UBICACIÓN DEL USER " + ID);
         riders[actualRider].travel();
         return actualRider;
     }
@@ -116,9 +116,9 @@ public class Dispatcher {
             return actualRider;
         }
         riders[actualRider].cancelTravel();
-        System.out.println("EL USER " + ID + ", CANCELÓ SU VIAJE CON EL RIDER " + actualRider + ", PREFIRIÓ AL RIDER " + riderIndex);
+        System.out.println("- USER " + ID + ": CANCELÓ SU VIAJE CON EL RIDER " + actualRider);
         riders[riderIndex].arrive();
-        System.out.println("EL RIDER " + riderIndex + " ACEPTÓ EL VIAJE DEL USER " + ID + ", YA VA EN CAMINO");
+        System.out.println("- RIDER " + riderIndex + ": ES EL NUEVO RIDER DE " + ID);
         return riderIndex;
     }
 

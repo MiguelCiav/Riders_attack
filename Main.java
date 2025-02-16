@@ -1,16 +1,3 @@
-/*
- * PROCESOS:
- * - Despachador
- * - Usuario
- * - Rider
- * 
- * RECURSOS CRÍTICOS:
- * - Cantidad de riders disponibles
- * - 
- * 
- * 
- */
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

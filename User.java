@@ -5,7 +5,7 @@ public class User extends Person implements Runnable{
         super(ID);
         personApp = app.values()[(int) (Math.random() * app.values().length)];
         this.dispatcher = dispatcher;
-        System.out.println("USER " + ID + " CREADO " + "(" + personApp + ", " + personService + ")");
+        System.out.println("- USER " + ID + ": " + personApp + ", " + personService);
     }
 
     @Override

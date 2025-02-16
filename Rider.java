@@ -11,8 +11,8 @@ public class Rider extends Person {
         travelTime = (int) (Math.random() * 50 + 1);
         arrivalTime = (int) (Math.random() * 30 + 1);
         riderTimer = new RiderTimer();
-        System.out.println("RIDER " + ID + " CREADO " + "(" + personApp + ", " + personService + ", " 
-        + arrivalTime +  ", " + travelTime + ")");
+        System.out.println("- RIDER " + ID + ": " + personApp + ", " + personService + ", " 
+        + arrivalTime +  ", " + travelTime);
     }
 
     public void arrive() {
