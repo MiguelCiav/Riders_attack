@@ -1,0 +1,98 @@
+@startuml Riders_attack
+hide empty members
+
+enum status {
+    AVAILABLE
+    BUSY
+}
+
+enum service {
+    MOTORCICLE
+    CAR
+}
+
+enum app {
+    BIPBIP
+    RIDERY
+    YUMMY
+}
+
+class Person {
+    #personService: service
+    #personApp: app
+    #ID: int
+    +getService(): service
+    +getApp(): app
+    +getID(): int
+}
+
+class Rider {
+    -riderStatus: status
+    -travelTime: int
+    -arrivalTime: int
+    +arrive(): void
+    +arrivalFinished(): boolean
+    +travel(): void
+    +travelFinished(): boolean
+    +cancelTravel(): void
+    +isAvailable(service, app): boolean
+    +isAvailable(service): boolean
+    +getTravelTime(): int
+    +getArrivalTime(): int
+    +finishWork(): void
+}
+
+class User <<Runable>>{
+    -dispatcher: Dispatcher
+    +run(): void
+}
+
+class RiderTimer {
+    -time: int
+    -kill: boolean
+    +countDown(seconds): void
+    +isFinished(): boolean
+    +reset(): void
+    +kill(): void
+}
+
+class Counter <<Thread>> {
+    +run(): void
+}
+
+class Dispatcher {
+    -MAX_RIDERS: int
+    -usersAttended: int
+    -availableRiders: int
+    -goal: int
+    +initRiders(bipbip, ridery, yummy): void
+    +requestRiders(service, app, ID): void
+    -requestFirstRider(service, app, ID): void
+    -@ getMinRider(service, app): int
+    -waitForArrive(service, app, actualRider, ID): int
+    -@ getNewRider(service, app, actualRider, ID): int
+    -endRiders(): void
+}
+
+class Main {
+    +main(String[] args): void
+}
+
+note right of Dispatcher
+    synchronized methods => @
+end note
+
+Main - Dispatcher
+Main -u- "1..*" User
+Dispatcher *-u- "1..*" Rider
+Counter -d-+ RiderTimer
+RiderTimer -l-* Rider
+Rider -u-|> Person
+User -u-|> Person
+status -[hidden]l- service
+service -[hidden]l- app
+Person +-u- app
+Person +-u- service
+Person +-u- status 
+
+@enduml
