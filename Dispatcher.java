@@ -4,6 +4,8 @@ public class Dispatcher {
     private int usersAttended = 0;
     private int availableRiders;
     private int goal;
+    private boolean justCars = true;
+    private boolean justMotorcicles = true;
 
     public Dispatcher(int bipbip, int ridery, int yummy, int goal) {
         this.MAX_RIDERS = bipbip + ridery + yummy;
@@ -13,23 +15,39 @@ public class Dispatcher {
         initRiders(bipbip, ridery, yummy);
     }
 
+    public void verifyVehicles(Rider rider) {
+        justCars = justCars && rider.getService() == Person.service.CAR;
+        justMotorcicles = justMotorcicles && rider.getService() == Person.service.MOTORCYCLE;
+    }
+
     public void initRiders(int bipbip, int ridery, int yummy) {
         int i = 0;
         for (i = 0; i < bipbip; i++) {
             riders[i] = new Rider(i,Person.app.BIPBIP);
+            verifyVehicles(riders[i]);
         }
         ridery += bipbip;
         for (; i < ridery; i++) {
             riders[i] = new Rider(i,Person.app.RIDERY);
+            verifyVehicles(riders[i]);
         }
         yummy += ridery;
         for (; i < yummy; i++) {
             riders[i] = new Rider(i,Person.app.YUMMY);
+            verifyVehicles(riders[i]);
         }
     }
 
     public void requestRider(Person.service service, Person.app app, int ID) {
-        System.out.println("- USER " + ID + ": SOLICITA VIAJE EN " + service + " (" + app + ")");
+        if (service == Person.service.CAR && justMotorcicles) {
+            service = Person.service.MOTORCYCLE;
+            System.out.println("- USER " + ID + ": CAR NO DISPONIBLE, SOLICITA VIAJE EN " + service + " (" + app + ")");
+        } else if (service == Person.service.MOTORCYCLE && justCars) {
+            service = Person.service.CAR;
+            System.out.println("- USER " + ID + ": MOTORCYCLE NO DISPONIBLE, SOLICITA VIAJE EN " + service + " (" + app + ")");
+        } else {
+            System.out.println("- USER " + ID + ": SOLICITA VIAJE EN " + service + " (" + app + ")");
+        }
         int actualRider = requestFirstRider(service, app, ID);
         int newRider = waitForArrive(service, app, actualRider, ID);
         while(!riders[newRider].travelFinished()){
