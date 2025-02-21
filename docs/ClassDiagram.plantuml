@@ -65,8 +65,11 @@ class Dispatcher {
     -usersAttended: int
     -availableRiders: int
     -goal: int
+    -justCars: boolean
+    -justMotorcycles: boolean
     +initRiders(bipbip, ridery, yummy): void
     +requestRiders(service, app, ID): void
+    -verifyVehicles(rider): void
     -requestFirstRider(service, app, ID): void
     -@ getMinRider(service, app): int
     -waitForArrive(service, app, actualRider, ID): int
