@@ -15,7 +15,7 @@ public class Dispatcher {
         initRiders(bipbip, ridery, yummy);
     }
 
-    public void verifyVehicles(Rider rider) {
+    private void verifyVehicles(Rider rider) {
         justCars = justCars && rider.getService() == Person.service.CAR;
         justMotorcicles = justMotorcicles && rider.getService() == Person.service.MOTORCYCLE;
     }
@@ -57,7 +57,7 @@ public class Dispatcher {
                 e.printStackTrace();
             }
         }
-        System.out.println("- USER " + ID + ": LLEGÓ A SU DESTINO GRACIAS AL RIDER " + newRider);
+        System.out.println("- USER " + ID + ": LLEGO A SU DESTINO GRACIAS AL RIDER " + newRider);
         usersAttended++;
         if(usersAttended == goal){
             endRiders();
@@ -73,7 +73,7 @@ public class Dispatcher {
                 actualRider = getMinRider(service, app);
             }
         }
-        System.out.println("- RIDER " + actualRider + ": ACEPTÓ VIAJE DEL USER " + ID);
+        System.out.println("- RIDER " + actualRider + ": ACEPTO VIAJE DEL USER " + ID);
         availableRiders++;
         return actualRider;
     }
@@ -108,7 +108,7 @@ public class Dispatcher {
             Thread.yield();
             actualRider = getNewRider(service, app, actualRider, ID);
         }
-        System.out.println("- RIDER " + actualRider + ": YA LLEGÓ A LA UBICACIÓN DEL USER " + ID);
+        System.out.println("- RIDER " + actualRider + ": YA LLEGO A LA UBICACION DEL USER " + ID);
         riders[actualRider].travel();
         return actualRider;
     }
@@ -134,7 +134,7 @@ public class Dispatcher {
             return actualRider;
         }
         riders[actualRider].cancelTravel();
-        System.out.println("- USER " + ID + ": CANCELÓ SU VIAJE CON EL RIDER " + actualRider);
+        System.out.println("- USER " + ID + ": CANCELO SU VIAJE CON EL RIDER " + actualRider);
         riders[riderIndex].arrive();
         System.out.println("- RIDER " + riderIndex + ": ES EL NUEVO RIDER DE " + ID);
         return riderIndex;
