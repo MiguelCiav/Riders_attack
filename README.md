@@ -26,4 +26,9 @@ Se hace por medio del constructor de la clase y del método `initRiders()`. Se c
 Para llevar control del caso en el que no existan conductores del vehículo que solicite un usuario se emplean las flags `justCars` y `justMotorcycles`, que indican si solo existe un tipo de vehículo. El método `initRiders()` hace uso de `verifyVehicles()` para actualizar dichas flags a medida que se crean los conductores.
 
 #### Solicitar conductores
-Los usuarios emplean el método `requestRiders()` para solicitar un conductor. Éste método se encarga primeramente de verificar que el usuario solicita un vehículo para el cual existen conductores, en caso de que no se indica en un mensaje que el usuario no puede solicitar su vehículo de preferencia y solicita el que haya disponible. Si su vehículo de preferencia si está disponible simplemente se indica que el usuario solicita un viaje en dicho vehículo.
+Los usuarios emplean el método `requestRiders()` para solicitar un conductor. Éste método se encarga primeramente de verificar que el usuario solicita un vehículo para el cual existen conductores. En caso de que no, se indica en un mensaje que el usuario no puede solicitar su vehículo de preferencia y solicita el que haya disponible. Si su vehículo de preferencia si está disponible simplemente se indica que el usuario solicita un viaje en dicho vehículo.
+
+Luego, se emplea `requestFirstRider()` para seleccionar un primer conductor que acepte el viaje del usuario. En caso de que no hayan conductores disponibles esta acción se seguirá intentando hasta poder asignar un conductor. 
+
+Para seleccionar el conductor se hace uso del primer método sincronizado del monitor, `getMinRider()`. Éste método recorre el arreglo de conductores y selecciona el índice del conductor disponible de menor tiempo de viaje y que mejor se ajuste a las preferencias del usuario. En caso de no conseguir ningún conductor se devuelve el valor -1 para indicar que se debe volver a intentar cuando se desocupe un conductor.
+

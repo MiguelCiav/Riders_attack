@@ -3,6 +3,18 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Main {
+    private static int getCantRiders(String[] line1, String[] line2, String[] line3, String app) {
+        int cantRiders = 0;
+        if (line1[0].toUpperCase().equals(app)) {
+            cantRiders = Integer.parseInt(line1[1].trim());
+        } else if (line2[0].toUpperCase().equals(app)){
+            cantRiders = Integer.parseInt(line2[1].trim());
+        } else {
+            cantRiders = Integer.parseInt(line3[1].trim());
+        }
+
+        return cantRiders;
+    }
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java Main <input_file>");
@@ -12,14 +24,14 @@ public class Main {
         String inputFileName = args[0];
         try (BufferedReader br = new BufferedReader(new FileReader(inputFileName))) {
             int maxUsers = Integer.parseInt(br.readLine().trim());
-            String[] bipbipData = br.readLine().split(",");
-            String[] rideryData = br.readLine().split(",");
-            String[] yummyData = br.readLine().split(",");
+            String[] line1 = br.readLine().split(",");
+            String[] line2 = br.readLine().split(",");
+            String[] line3 = br.readLine().split(",");
 
-            int bipbip = Integer.parseInt(bipbipData[1].trim());
-            int ridery = Integer.parseInt(rideryData[1].trim());
-            int yummy = Integer.parseInt(yummyData[1].trim());
-
+            int bipbip = getCantRiders(line1, line2, line3, "BIPBIP");
+            int ridery = getCantRiders(line1, line2, line3, "RIDERY");
+            int yummy = getCantRiders(line1, line2, line3, "YUMMY");
+            
             Dispatcher dispatcher = new Dispatcher(bipbip, ridery, yummy, maxUsers);
             User[] users = new User[maxUsers];
 

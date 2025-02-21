@@ -78,6 +78,7 @@ class Dispatcher {
 }
 
 class Main {
+    -getCantRiders(line1, line2, line3, app): int
     +main(String[] args): void
 }
 
